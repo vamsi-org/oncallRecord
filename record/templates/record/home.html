@@ -1,0 +1,134 @@
+{% extends 'record/base.html' %}
+{% block data %}
+<!--
+So here's the plan. I want two different views essentially.
+    1. User is currently on call. Want a summary table on the left, and a current log on the right
+    2. User is not on call. Summary of LAST on call on the left, list of different on call sessions on right
+-->
+<!-- User IS on call currently -->
+{% if on_call %}
+<div class="container">
+    <div class="row my-3">
+        <div class="col"><p class="text-center" style="font-size:28px;">{{user.first_name}}, you are on call for: {{dates.start|date:'D (d/m)'}} - {{dates.end|date:'D (d/m)'}} </p></div>
+    </div>
+    <div class="row">
+        <!-- Summary table -->
+        <div class="col-4">
+            <div class="card">
+                <div class="card-header"><b>Summary</b></div>
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <th>Phone time</th>
+                        <td>{{totals.minutes}} minutes</td>
+                    </tr>
+                    {% if call_ins %}
+                        {% for call_in in call_ins %}
+                        <tr>
+                            <th>Call in {{forloop.counter}}</th>
+                            <td>{{call_in.time_started|date:'M d H:m'}} - {{call_in.time_ended|date:'M d H:m'}}</td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <th>Mileage</th>
+                            <td>{{totals.mileage}}km</td>
+                        </tr>
+                    {% else %}
+                        <td colspan="2" class="lead text-center">No call ins</td>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="card">
+                <div class="card-header">
+                    Calls
+                    <a href="#" class="btn btn-outline-info">Add call</a>
+                </div>
+                <table class="table">
+                    <thead class="thead">
+                        <tr>
+                            <th scope="col" class="col-1">Date</th>
+                            <th scope="col" class="col-1">Type</th>
+                            <th scope="col" class="col-1">Length (min)</th>
+                            <th scope="col" class="col-1">Call-in</th>
+                            <th scope="col">Description</th>
+                            <th scope="col"></th>
+                        </tr>
+                        {% for call in calls %}
+                        <tr>
+                            <td class="col-1">{{call.time_started|date:'d/m'}}</td>
+                            <td class="col-1">{{call.call_type}}</td>
+                            <td class="col-1">{{call.minutes}}</td>
+                            {% if call.call_in %}
+                                <td class="col-1">Yes</td>
+                            {% else %}
+                                <td class="col-1">No</td>
+                            {%endif%}
+                            <td>{{call.description}}</td>
+                            <td class="col-1"><a href="#" class="btn btn-warning">View</a></td>
+                        {% endfor %}
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% else %} <!-- if they aren't on call -->
+<div class="container body-content">
+    <div class="row my-3">
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    Your most recent on-call session: <i>{{dates.start|date:'d/m/y'}} - {{dates.end|date:'d/m/y'}}</i>
+                    <a class="btn btn-warning ml-5" href="#">View</a>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-4"><b>Total time on call:</b></div>
+                        <div class="col-8">{{totals.minutes}} minutes</div>
+                    </div>
+                    {% for call_in in call_ins %}
+                    <div class="row">
+                        <div class="col-4"><b>Call in number {{forloop.counter }}:</b></div>
+                        <div class="col-8">{{call_in.time_started|date:'d/M h:m'}} - {{call_in.time_ended}}</div>
+                    </div>
+                    {% endfor %}
+                    <div class="row">
+                        <div class="col"><b>Mileage</b></div>
+                        <div class="col">{{totals.mileage}}km</div>
+                        <div class="col"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col text-right"><a class="btn btn-success" href="#">New on-call record</a></div>
+    </div>
+    <div class="row">
+        <!-- table for list of on calls to read-->
+        <div class="card col">
+            <div class="card-header h5">On call periods for {{user.first_name}}</div>
+            <table class="table">
+                <thead class="thead">
+                    <tr>
+                        <th>Dates</th>
+                        <th></th>
+                    </tr>
+                    {% for session in sessions %}
+                        <tr>
+                            <td>{{session.start_date}} - {{session.end_date}}</td>
+                            <td><a href="#" class="btn btn-outline-info">View</a></td>
+                        </tr>
+                    {% endfor %}
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

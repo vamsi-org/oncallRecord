@@ -1,0 +1,28 @@
+{% extends 'record/base.html' %}
+{% block title %}{{user.first_name}} {{user.last_name}}'s profile{% endblock %}
+{% load crispy_forms_tags %}
+{% block data %}
+    <div class="row">
+        <div class="col-10">
+            <h2 class="account-heading">{{ user.first_name }}</h2>
+            <p class="text-secondary">{{ user.email }}</p>
+        </div>
+        <div id="edit_btn_div" class="col-2">
+            <button id="edit_btn" type ='button' class="btn btn-outline-primary">Edit details</button>
+        </div>
+    </div>
+
+    <div class="hidden" id="hidden_form">
+        <form method="POST" id="edit_form">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Profile Info</legend>
+                {{ u_form|crispy }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit" id="update">Update</button>
+            </div>
+        </form>
+        <button class="btn btn-outline-primary" id="cancel_btn">Cancel</button>
+    </div>
+{% endblock data %}
