@@ -1,6 +1,6 @@
 from django import forms
-from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from .models import *
 
 
 class UserRegisterForm(UserCreationForm):
@@ -19,3 +19,9 @@ class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'email']
+
+
+class AddCallForm(forms.ModelForm):
+    class Meta:
+        model = Call
+        exclude = ('session','minutes')

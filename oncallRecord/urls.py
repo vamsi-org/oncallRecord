@@ -21,8 +21,9 @@ from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', login_required(record_views.Home.as_view()), name='homepage'),  # todo this is not re-routing correctly
+    path('', login_required(record_views.Home.as_view()), name='home'),  # todo this is not re-routing correctly
     path('profile/', record_views.profile, name='profile'),
     path('logout/', user_views.LogoutView.as_view(template_name='record/logout.html'), name='logout'),
     path('login/', user_views.LoginView.as_view(template_name='record/login.html'), name='login'),
+    path('add_call/', record_views.new_call, name="add_call"),
 ]

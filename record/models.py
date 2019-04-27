@@ -46,13 +46,29 @@ class Call(models.Model):
         ("TDM","TDM"),
         ("Other","Other")
     ]
-
+    CALLERS = [
+        ('Nurse','Nurse'),
+        ('House Surgeon','House Surgeon'),
+        ('Registrar','Registrar'),
+        ('Consultant','Consultant'),
+        ('Other','Other')
+    ]
+    HOSPITALS = [
+        ('Chch','Christchurch'),
+        ('BWD','Burwood'),
+        ('HLM','Hillmorton'),
+        ('PMH','Princess Margaret'),
+        ('Other','Other')
+    ]
     session = models.ForeignKey(OnCall, on_delete=models.CASCADE)
     time_started = models.DateTimeField(default=datetime.now) # todo validation on this being in session_start - session_end
     call_type = models.CharField(choices=TYPES, max_length=10)
+    caller_type = models.CharField(choices=CALLERS, max_length=13)
+    caller_hospital = models.CharField(choices=HOSPITALS, max_length=25)
+    caller_ward = models.CharField(max_length=10)
     description = models.CharField(max_length=500)
     call_in = models.BooleanField(default=False)
-    mileage = models.IntegerField(blank=True)
+    mileage = models.IntegerField(blank=True, default=0)
     time_ended = models.DateTimeField()
     minutes = models.IntegerField(editable=False)
 

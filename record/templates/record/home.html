@@ -44,7 +44,7 @@ So here's the plan. I want two different views essentially.
             <div class="card">
                 <div class="card-header">
                     Calls
-                    <a href="#" class="btn btn-outline-info">Add call</a>
+                    <a href="{% url 'add_call' %}" class="btn btn-outline-info">Add call</a>
                 </div>
                 <table class="table">
                     <thead class="thead">
@@ -74,11 +74,15 @@ So here's the plan. I want two different views essentially.
             </div>
         </div>
     </div>
+    <div class="row my-5">
+        Searcher down here? Or, maybe like a contacts list/useful information
+    </div>
+
 </div>
 
 
 {% else %} <!-- if they aren't on call -->
-<div class="container body-content">
+<div class="container">
     <div class="row my-3">
         <div class="col-6">
             <div class="card">
@@ -107,26 +111,28 @@ So here's the plan. I want two different views essentially.
             </div>
         </div>
 
-        <div class="col text-right"><a class="btn btn-success" href="#">New on-call record</a></div>
+        <div class="col">Put next on call details here (and who is currently on call)</div>
     </div>
     <div class="row">
         <!-- table for list of on calls to read-->
-        <div class="card col">
-            <div class="card-header h5">On call periods for {{user.first_name}}</div>
-            <table class="table">
-                <thead class="thead">
-                    <tr>
-                        <th>Dates</th>
-                        <th></th>
-                    </tr>
-                    {% for session in sessions %}
-                        <tr>
-                            <td>{{session.start_date}} - {{session.end_date}}</td>
-                            <td><a href="#" class="btn btn-outline-info">View</a></td>
-                        </tr>
-                    {% endfor %}
-                </thead>
-            </table>
+        <div class="col">
+            <div class="card">
+                <div class="card-header h5">On call periods for {{user.first_name}}</div>
+                    <table class="table">
+                        <thead class="thead">
+                            <tr>
+                                <th>Dates</th>
+                                <th></th>
+                            </tr>
+                            {% for session in sessions %}
+                                <tr>
+                                    <td>{{session.start_date}} - {{session.end_date}}</td>
+                                    <td><a href="#" class="btn btn-outline-info">View</a></td>
+                                </tr>
+                            {% endfor %}
+                        </thead>
+                    </table>
+            </div>
         </div>
     </div>
 </div>
