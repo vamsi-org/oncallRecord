@@ -33,7 +33,7 @@ class OnCall(models.Model):
     class Meta:
         verbose_name = 'OnCall'
         unique_together = 'pharmacist','start_date'
-        ordering = ('end_date',)
+        ordering = ['-end_date']
 
     def __str__(self):
         return f'{self.pharmacist.user.first_name} {self.pharmacist.user.last_name}: {self.start_date:%d/%m/%y} - {self.end_date:%d/%m/%y}'
@@ -65,7 +65,7 @@ class Call(models.Model):
     call_type = models.CharField(choices=TYPES, max_length=10)
     caller_type = models.CharField(choices=CALLERS, max_length=13)
     caller_hospital = models.CharField(choices=HOSPITALS, max_length=25)
-    caller_ward = models.CharField(max_length=10)
+    caller_ward = models.CharField(max_length=10)  # Todo some logic here to set the hospital if the ward is set
     description = models.CharField(max_length=500)
     call_in = models.BooleanField(default=False)
     mileage = models.IntegerField(blank=True, default=0)

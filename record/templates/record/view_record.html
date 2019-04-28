@@ -1,0 +1,60 @@
+{% extends 'record/base.html' %}
+{% block title %}Oncall Record{% endblock %}
+{% block data %}
+<div class="container">
+    <div class="row my-3">
+        <div class="col-3">
+            <div class="card">
+                <div class="card-header">Summary for period: <i>{{oncall.start_date|date:'d/m/y'}} - {{oncall.end_date|date:'d/m/y'}}</i></div>
+                <table class="table">
+                    <tr>
+                        <th>Phone time</th>
+                        <td>{{totals.minutes}} minutes</td>
+                    </tr>
+                    <tr>
+                        <th>No. call-ins</th>
+                        <td>{{call_ins|length}}</td>
+                    </tr>
+                    {% if call_ins %}
+                        {% for call_in in call_ins %}
+                        {% endfor %}
+                        <tr>
+                            <th>Mileage</th>
+                            <td>{{totals.mileage}}km</td>
+                        </tr>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card">
+                <div class="card-header h5">Call details</div>
+                <table class="table table-striped">
+                    <thead class="thead">
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Call type</th>
+                            <th>Ward</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for call in calls %}
+                            <tr>
+                                <td>{{call.time_started|date:'d/m'}}</td>
+                                <td>{{call.minutes}} min</td>
+                                <td>{{call.call_type}}</td>
+                                <td>{{call.caller_ward}}</td>
+                                <td>{{call.description}}</td>
+
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -6,11 +6,11 @@
         <form method="POST" id="edit_form">
             {% csrf_token %}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Profile Info</legend>
+                <legend class="border-bottom mb-4">New Call</legend>
                 {{ call_form|crispy }}
             </fieldset>
             <div class="form-group">
-                <button class="btn btn-primary" type="submit" id="update">Update</button>
+                <button class="btn btn-primary" type="submit" id="update">Add call</button>
             </div>
         </form>
 </div>

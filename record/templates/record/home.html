@@ -3,48 +3,50 @@
 <!--
 So here's the plan. I want two different views essentially.
     1. User is currently on call. Want a summary table on the left, and a current log on the right
-    2. User is not on call. Summary of LAST on call on the left, list of different on call sessions on right
+    2. User is not on call. Summary of LAST on call on the left, details of next on call on left and list of sessions below
 -->
 <!-- User IS on call currently -->
 {% if on_call %}
 <div class="container">
     <div class="row my-3">
-        <div class="col"><p class="text-center" style="font-size:28px;">{{user.first_name}}, you are on call for: {{dates.start|date:'D (d/m)'}} - {{dates.end|date:'D (d/m)'}} </p></div>
+        <div class="col"><p class="text-center h2">{{user.first_name}}, you are on call: {{current_session.start_date|date:'D (d/m)'}} to {{current_session.end_date|date:'D (d/m)'}}. </p></div>
     </div>
     <div class="row">
         <!-- Summary table -->
         <div class="col-4">
-            <div class="card">
+            <div class="card shadow">
                 <div class="card-header"><b>Summary</b></div>
-                <table class="table">
-                    <tbody>
-                    <tr>
-                        <th>Phone time</th>
-                        <td>{{totals.minutes}} minutes</td>
-                    </tr>
-                    {% if call_ins %}
-                        {% for call_in in call_ins %}
+                <div class="card-body mx-0">
+                    <table class="table">
+                        <tbody>
                         <tr>
-                            <th>Call in {{forloop.counter}}</th>
-                            <td>{{call_in.time_started|date:'M d H:m'}} - {{call_in.time_ended|date:'M d H:m'}}</td>
+                            <th>Phone time</th>
+                            <td>{{totals.minutes}} minutes</td>
                         </tr>
-                        {% endfor %}
-                        <tr>
-                            <th>Mileage</th>
-                            <td>{{totals.mileage}}km</td>
-                        </tr>
-                    {% else %}
-                        <td colspan="2" class="lead text-center">No call ins</td>
-                    {% endif %}
-                    </tbody>
-                </table>
+                        {% if call_ins %}
+                            {% for call_in in call_ins %}
+                            <tr>
+                                <th>Call in {{forloop.counter}}</th>
+                                <td>{{call_in.time_started|date:'M d H:m'}} - {{call_in.time_ended|date:'M d H:m'}}</td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <th>Mileage</th>
+                                <td>{{totals.mileage}}km</td>
+                            </tr>
+                        {% else %}
+                            <td colspan="2" class="lead text-center">No call ins</td>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <div class="col-8">
             <div class="card">
                 <div class="card-header">
-                    Calls
-                    <a href="{% url 'add_call' %}" class="btn btn-outline-info">Add call</a>
+                    <p class="h5">Call details: <a href="{% url 'add_call' %}" class="btn btn-outline-info float-right">New call</a></p>
+
                 </div>
                 <table class="table">
                     <thead class="thead">
@@ -67,7 +69,7 @@ So here's the plan. I want two different views essentially.
                                 <td class="col-1">No</td>
                             {%endif%}
                             <td>{{call.description}}</td>
-                            <td class="col-1"><a href="#" class="btn btn-warning">View</a></td>
+                            <td class="col-1"><a href="{% url 'view_call' call.id %}" class="btn btn-warning">View</a></td>
                         {% endfor %}
                     </thead>
                 </table>
@@ -85,39 +87,46 @@ So here's the plan. I want two different views essentially.
 <div class="container">
     <div class="row my-3">
         <div class="col-6">
-            <div class="card">
+            <div class="card shadow">
                 <div class="card-header">
-                    Your most recent on-call session: <i>{{dates.start|date:'d/m/y'}} - {{dates.end|date:'d/m/y'}}</i>
-                    <a class="btn btn-warning ml-5" href="#">View</a>
+                    Summary for period: <i>{{previous_session.start_date|date:'d/m/y'}} - {{previous_session.end_date|date:'d/m/y'}}</i>
+                    <a href="{% url 'oncall_view' previous_session.id %}" class="btn btn-info btn-sm mr-0">View</a>
                 </div>
-
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-4"><b>Total time on call:</b></div>
-                        <div class="col-8">{{totals.minutes}} minutes</div>
-                    </div>
-                    {% for call_in in call_ins %}
-                    <div class="row">
-                        <div class="col-4"><b>Call in number {{forloop.counter }}:</b></div>
-                        <div class="col-8">{{call_in.time_started|date:'d/M h:m'}} - {{call_in.time_ended}}</div>
-                    </div>
-                    {% endfor %}
-                    <div class="row">
-                        <div class="col"><b>Mileage</b></div>
-                        <div class="col">{{totals.mileage}}km</div>
-                        <div class="col"></div>
-                    </div>
-                </div>
+                <table class="table">
+                    <tr>
+                        <th>Phone time</th>
+                        <td>{{totals.minutes}} minutes</td>
+                    </tr>
+                    <tr>
+                        <th>No. call-ins</th>
+                        <td>{{call_ins|length}}</td>
+                    </tr>
+                    {% if call_ins %}
+                        {% for call_in in call_ins %}
+                        {% endfor %}
+                        <tr>
+                            <th>Mileage</th>
+                            <td>{{totals.mileage}}km</td>
+                        </tr>
+                    {% endif %}
+                </table>
             </div>
         </div>
-
-        <div class="col">Put next on call details here (and who is currently on call)</div>
+        <!-- Next session table -->
+        <div class="col-6">
+            <div class="card shadow">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Your next on call period: {{next_session.start_date|date:'M d'}} - {{next_session.end_date|date:'M d'}}</li>
+                    <l1 class="list-group-item">{{current_session.pharmacist}} is on call {{current_session.start_date|date:'M d'}} - {{current_session.end_date|date:'M d'}} </l1>
+                </ul>
+            </div>
+        </div>
     </div>
     <div class="row">
         <!-- table for list of on calls to read-->
         <div class="col">
-            <div class="card">
-                <div class="card-header h5">On call periods for {{user.first_name}}</div>
+            <div class="card shadow">
+                <div class="card-header h5">{{user.first_name}}'s on call periods</div>
                     <table class="table">
                         <thead class="thead">
                             <tr>
@@ -127,7 +136,7 @@ So here's the plan. I want two different views essentially.
                             {% for session in sessions %}
                                 <tr>
                                     <td>{{session.start_date}} - {{session.end_date}}</td>
-                                    <td><a href="#" class="btn btn-outline-info">View</a></td>
+                                    <td><a href="{% url 'oncall_view' session.id %}" class="btn btn-outline-info">View</a></td>
                                 </tr>
                             {% endfor %}
                         </thead>

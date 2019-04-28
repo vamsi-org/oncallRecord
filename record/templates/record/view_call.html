@@ -1,0 +1,7 @@
+{% extends 'record/base.html' %}
+{% block title %}View call {% endblock %}
+{% block data %}
+    {{call.session.pharmacist}}
+    {{call.time_started}}
+    {{call.description}}
+{% endblock %}

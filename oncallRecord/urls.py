@@ -26,4 +26,6 @@ urlpatterns = [
     path('logout/', user_views.LogoutView.as_view(template_name='record/logout.html'), name='logout'),
     path('login/', user_views.LoginView.as_view(template_name='record/login.html'), name='login'),
     path('add_call/', record_views.new_call, name="add_call"),
+    path('view_record/<int:pk>', record_views.OnCallDetail.as_view(), name='oncall_view'),
+    path('view_call/<int:pk>/', record_views.CallDetail.as_view(), name='view_call')
 ]
