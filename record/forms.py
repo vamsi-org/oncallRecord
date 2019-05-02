@@ -24,4 +24,9 @@ class UserUpdateForm(forms.ModelForm):
 class AddCallForm(forms.ModelForm):
     class Meta:
         model = Call
-        exclude = ('session','minutes')
+        exclude = ('minutes',)
+
+    def __init__(self, user, *args, **kwargs):
+        super(AddCallForm, self).__init__(*args, **kwargs)
+        self.fields['session'].queryset = OnCall.objects.filter(pharmacist__user=user)
+

@@ -38,7 +38,7 @@ class Home(ListView):
 
         # Getting call data for that session
         calls = Call.objects.filter(session__pharmacist__user=self.request.user).filter(session=session).order_by('-time_started')
-
+        context['calls'] = calls
         # summing up the total phone time
         phone_time = 0
         for call in calls:
@@ -95,17 +95,20 @@ class CallDetail(DetailView):
     template_name = 'record/view_call.html'
 
 
+@login_required
 def new_call(request):
+    print(request.user)
     if request.method == 'POST':
-        call_form = AddCallForm(request.POST, instance=request.user)
-        if call_form.is_valid():
-            call_form.save()
-            messages.success(request, 'God dammit')
+        form = AddCallForm(request.user, request.POST)
+        if form.is_valid():
+            res = form.save(commit=False)
+            messages.success(request, 'New call added.')
+            res.user = request.user
+            res.save()
             return redirect('home')
     else:
-        call_form = AddCallForm(instance=request.user)
-        context = {'call_form': call_form}
-        return render(request, 'record/add_call.html', context=context)
+        call_form = AddCallForm(request.user)
+    return render(request, 'record/add_call.html', {'call_form': call_form})
 
 
 @login_required
