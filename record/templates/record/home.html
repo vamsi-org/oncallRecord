@@ -84,66 +84,75 @@ So here's the plan. I want two different views essentially.
 
 
 {% else %} <!-- if they aren't on call -->
-
-<div class="row my-3">
-    <div class="col-6">
-        <div class="card shadow">
-            <div class="card-header">
-                Summary for period: <i>{{previous_session.start_date|date:'d/m/y'}} - {{previous_session.end_date|date:'d/m/y'}}</i>
-                <a href="{% url 'oncall_view' previous_session.id %}" class="btn btn-info btn-sm float-right">View</a>
-            </div>
-            <table class="table">
-                <tr>
-                    <th>Phone time</th>
-                    <td>{{totals.minutes}} minutes</td>
-                </tr>
-                <tr>
-                    <th>No. call-ins</th>
-                    <td>{{call_ins|length}}</td>
-                </tr>
-                {% if call_ins %}
-                    {% for call_in in call_ins %}
-                    {% endfor %}
-                    <tr>
-                        <th>Mileage</th>
-                        <td>{{totals.mileage}}km</td>
-                    </tr>
-                {% endif %}
-            </table>
-        </div>
-    </div>
-    <!-- Next session table -->
-    <div class="col-6">
-        <div class="card shadow">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Your next on call period: {{next_session.start_date|date:'M d'}} - {{next_session.end_date|date:'M d'}}</li>
-                <l1 class="list-group-item">{{current_session.pharmacist}} is on call {{current_session.start_date|date:'M d'}} - {{current_session.end_date|date:'M d'}} </l1>
-            </ul>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <!-- table for list of on calls to read-->
-    <div class="col">
-        <div class="card shadow">
-            <div class="card-header h5">{{user.first_name}}'s on call periods</div>
+    {% if previous_session %}
+    <div class="row my-3">
+        <div class="col-6">
+            <div class="card shadow">
+                <div class="card-header">
+                    Summary for period: <i>{{previous_session.start_date|date:'d/m/y'}} - {{previous_session.end_date|date:'d/m/y'}}</i>
+                    <a href="{% url 'oncall_view' previous_session.id %}" class="btn btn-info btn-sm float-right">View</a>
+                </div>
                 <table class="table">
-                    <thead class="thead">
-                        <tr>
-                            <th>Dates</th>
-                            <th></th>
-                        </tr>
-                        {% for session in sessions %}
-                            <tr>
-                                <td>{{session.start_date}} - {{session.end_date}}</td>
-                                <td><a href="{% url 'oncall_view' session.id %}" class="btn btn-outline-info">View</a></td>
-                            </tr>
+                    <tr>
+                        <th>Phone time</th>
+                        <td>{{totals.minutes}} minutes</td>
+                    </tr>
+                    <tr>
+                        <th>No. call-ins</th>
+                        <td>{{call_ins|length}}</td>
+                    </tr>
+                    {% if call_ins %}
+                        {% for call_in in call_ins %}
                         {% endfor %}
-                    </thead>
+                        <tr>
+                            <th>Mileage</th>
+                            <td>{{totals.mileage}}km</td>
+                        </tr>
+                    {% endif %}
                 </table>
+            </div>
+        </div>
+        <!-- Next session table -->
+        <div class="col-6">
+            <div class="card shadow">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Your next on call period: {{next_session.start_date|date:'M d'}} - {{next_session.end_date|date:'M d'}}</li>
+                    <l1 class="list-group-item">{{current_session.pharmacist}} is on call {{current_session.start_date|date:'M d'}} - {{current_session.end_date|date:'M d'}} </l1>
+                </ul>
+            </div>
         </div>
     </div>
-</div>
-
+    <div class="row">
+        <!-- table for list of on calls to read-->
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header h5">{{user.first_name}}'s on call periods</div>
+                    <table class="table">
+                        <thead class="thead">
+                            <tr>
+                                <th>Dates</th>
+                                <th></th>
+                            </tr>
+                            {% for session in sessions %}
+                                <tr>
+                                    <td>{{session.start_date}} - {{session.end_date}}</td>
+                                    <td><a href="{% url 'oncall_view' session.id %}" class="btn btn-outline-info">View</a></td>
+                                </tr>
+                            {% endfor %}
+                        </thead>
+                    </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-6">
+            <div class="card shadow">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Your next on call period: {{next_session.start_date|date:'M d'}} - {{next_session.end_date|date:'M d'}}</li>
+                    <l1 class="list-group-item">{{current_session.pharmacist}} is on call {{current_session.start_date|date:'M d'}} - {{current_session.end_date|date:'M d'}} </l1>
+                </ul>
+            </div>
+    </div>
+    {% endif %}
 {% endif %}
 {% endblock %}
