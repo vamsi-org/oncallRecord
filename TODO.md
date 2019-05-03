@@ -8,6 +8,7 @@
 
 2. Roster:
 - No idea how to do this yet
+- Would need signals with OnCall to add/modify sessions so management is done by this part
 
 3. Search function:
 - search descriptions
