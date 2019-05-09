@@ -1,0 +1,18 @@
+{% extends 'record/base.html' %}
+{% block title %}Search{% endblock %}
+{% block data %}
+<div class="mt-2">
+    <form name="myform" method="GET" action="#">
+        <div class="input-group px-3">
+            <input id="searchtxt" type="text" class="form-control" name="q" placeholder="Search for a topic..." aria-label="Search for a medicine..." value="{{ request.GET.q }}">
+                <div class="input-group-append">
+                    <button id='searchbtn' class="btn btn-warning btn-outline-dark" type="submit">Search</button>
+                </div>
+        </div>
+    </form>
+</div>
+
+{% for result in results %}
+    {{result.description}}
+{% endfor %}
+{% endblock %}

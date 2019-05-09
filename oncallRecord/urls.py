@@ -27,5 +27,6 @@ urlpatterns = [
     path('login/', user_views.LoginView.as_view(template_name='record/login.html'), name='login'),
     path('view_record/<int:pk>', record_views.OnCallDetail.as_view(), name='oncall_view'),
     path('view_call/<int:pk>/', record_views.CallDetail.as_view(), name='view_call'),
+    path('search/', record_views.Search.as_view(), name='search')
     #path('roster/', roster.calendar, name='roster')
 ]

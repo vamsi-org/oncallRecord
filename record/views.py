@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.views.generic import DetailView
+from django.views.generic import DetailView, ListView
 from django.contrib import messages
 from .forms import AddCallForm
 from .models import Call
@@ -69,11 +69,9 @@ def home_func(request):
             for call in call_ins:
                 mileage += call.mileage
         except AttributeError:
-            last_period = False
-            calls = False
-            call_ins = False
-            mileage = False
-            minutes = False
+            last_period = {}
+            calls = {}
+            call_ins = {}
 
         try:
             next_period = pharmacist.periods.filter(start_date__gt=td)
@@ -81,8 +79,8 @@ def home_func(request):
                 Q(start_date__lte=td) & Q(end_date__gt=td)).first()
 
         except AttributeError:
-            next_period = False
-            current_period = False
+            next_period = {}
+            current_period = {}
 
         data = {
             'last_period': last_period,
@@ -138,4 +136,14 @@ class CallDetail(DetailView):
     template_name = 'record/view_call.html'
 
 
+class Search(ListView):
+    model = Call
+    template_name = 'record/search.html'
+    context_object_name = 'results'
 
+    def get_queryset(self):
+        if self.request.method == 'GET':
+            q = self.request.GET.get('q')
+            print(q)
+            qset =  Call.objects.filter(description__contains=q)
+            return qset
