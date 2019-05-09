@@ -1,10 +1,9 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DetailView
-from .forms import *
+from django.shortcuts import render
+from django.views.generic import DetailView
 from django.contrib import messages
-from .forms import UserUpdateForm
-from .models import OnCall, Call
+from .forms import AddCallForm
+from .models import Call
+from roster.models import Pharmacist, OnCallPeriod
 from datetime import datetime
 from django.http import HttpResponse
 from django.db.models import Q
@@ -74,7 +73,7 @@ def home_func(request):
 
         try:
             next_period = pharmacist.periods.filter(start_date__gt=td)
-            current_period = OnCall.objects.filter(
+            current_period = OnCallPeriod.objects.filter(
                 Q(start_date__lte=td) & Q(end_date__gt=td)).first()
 
         except AttributeError:
@@ -98,14 +97,14 @@ class OnCallDetail(DetailView):
     #Todo:
     - Change detail view if no calls
     """
-    model = OnCall
+    model = OnCallPeriod
     template_name = 'record/view_record.html'
     context_object_name = 'oncall'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(OnCallDetail, self).get_context_data(**kwargs)
         td = datetime.today().date()
-        session = OnCall.objects.filter(
+        session = OnCallPeriod.objects.filter(
             Q(pharmacist__user=self.request.user) & Q(start_date__lte=td)).last()
         context['pharmacist'] = session.pharmacist
 
@@ -136,17 +135,3 @@ class CallDetail(DetailView):
 
 
 
-@login_required
-def profile(request):
-    if request.method == 'POST':
-        u_form = UserUpdateForm(request.POST, instance=request.user)
-        if u_form.is_valid():
-            u_form.save()
-            messages.success(request, 'Profile updated successfully.')
-            return redirect('profile')
-    else:
-        u_form = UserUpdateForm(instance=request.user)
-    context = {
-        'u_form': u_form
-    }
-    return render(request, 'record/profile.html', context=context)

@@ -1,42 +1,7 @@
 from django.db import models
 from datetime import datetime
-from django.contrib.auth.models import User
+from roster.models import OnCallPeriod
 # Create your models here.
-
-
-class Pharmacist(models.Model):
-    """
-    Setting up the model for a pharmacist
-    """
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    is_sterile_trained = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f'{self.user.first_name} {self.user.last_name}'
-
-
-class Roster(models.Model):
-    """
-    I would like the roster to be included here eventually... maybe some day
-    """
-    pass
-
-
-class OnCall(models.Model):
-    """
-    Model used for an on call period
-    """
-    pharmacist = models.ForeignKey(Pharmacist, on_delete=models.CASCADE, related_name='periods')
-    start_date = models.DateField()
-    end_date = models.DateField()
-
-    class Meta:
-        verbose_name = 'OnCall'
-        unique_together = 'pharmacist','start_date'
-        ordering = ['-end_date']
-
-    def __str__(self):
-        return f'{self.pharmacist.user.first_name} {self.pharmacist.user.last_name}: {self.start_date:%d/%m/%y} - {self.end_date:%d/%m/%y}'
 
 
 class Call(models.Model):
@@ -60,7 +25,7 @@ class Call(models.Model):
         ('PMH','Princess Margaret'),
         ('Other','Other')
     ]
-    session = models.ForeignKey(OnCall, on_delete=models.CASCADE, related_name='calls')
+    session = models.ForeignKey(OnCallPeriod, on_delete=models.CASCADE, related_name='calls')
     time_started = models.DateTimeField(default=datetime.now) # todo validation on this being in session_start - session_end
     call_type = models.CharField(choices=TYPES, max_length=10)
     caller_type = models.CharField(choices=CALLERS, max_length=13)

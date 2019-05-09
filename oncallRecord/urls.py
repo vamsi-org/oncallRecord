@@ -16,14 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from record import views as record_views
+from roster import views as roster_views
 from django.contrib.auth import views as user_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', record_views.home_func, name='home'),
-    path('profile/', record_views.profile, name='profile'),
+    path('profile/', roster_views.profile, name='profile'),
     path('logout/', user_views.LogoutView.as_view(template_name='record/logout.html'), name='logout'),
     path('login/', user_views.LoginView.as_view(template_name='record/login.html'), name='login'),
     path('view_record/<int:pk>', record_views.OnCallDetail.as_view(), name='oncall_view'),
-    path('view_call/<int:pk>/', record_views.CallDetail.as_view(), name='view_call')
+    path('view_call/<int:pk>/', record_views.CallDetail.as_view(), name='view_call'),
+    #path('roster/', roster.calendar, name='roster')
 ]

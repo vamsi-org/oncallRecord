@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'record.apps.RecordConfig',
+    'roster.apps.RosterConfig',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
