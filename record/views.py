@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import DetailView
 from django.contrib import messages
 from .forms import AddCallForm
@@ -31,9 +31,13 @@ def home_func(request):
                 return redirect('home')
         else:
             current_period = pharmacist.periods.filter(
-                Q(start_date__lte=td) & Q(end_date__gt=td)).first()
-            calls = current_period.calls.all()
-            call_ins = calls.filter(call_in=True)
+                Q(start_date__lte=td) & Q(end_date__gte=td)).first()
+            try:
+                calls = current_period.calls.all()
+                call_ins = calls.filter(call_in=True)
+            except AttributeError:
+                calls = {}
+                call_ins = {}
 
             minutes = 0
             mileage = 0
