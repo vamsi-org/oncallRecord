@@ -6,80 +6,91 @@ from django.contrib import messages
 from .forms import UserUpdateForm
 from .models import OnCall, Call
 from datetime import datetime
+from django.http import HttpResponse
+from django.db.models import Q
 
 
-class Home(ListView):
-    """
-    #Todo:
-    - view breaks if no on call period set
-    """
-    model = OnCall
-    template_name = 'record/home.html'
-    context_object_name = 'sessions'
+def home_func(request):
+    td = datetime.today().date()
+    try:
+        pharmacist = Pharmacist.objects.filter(user__username=request.user).first()
+        periods = pharmacist.periods.filter(start_date__lte=td).order_by('-start_date')
 
-    def queryset(self):  # returning the most recent OnCall object in the past for the logged in user
-        td = datetime.today().date()
-        return OnCall.objects.filter(pharmacist__user=self.request.user).filter(start_date__lte=td).order_by('-start_date')
+    except AttributeError:  # user has no periods of on call
+        periods = False
+        html = "<h1> No user found </h1>"
+        return HttpResponse(html)
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        """
-        This function needs to set 7 fields of the context data for the queryset
-        1. A flag to say whether the user is on call currently: 'on_call'
-        2 & 3. Two parameters regarding this, and the next session: 'previous_session', 'next_session'
-        4. If getting the current pharmacist on call: 'current_session'
-        5. Getting all the call objects for the current/previous session: 'calls'
-        6. As per # 5 but where call_in = True: 'call_ins'
-        7. Totals for phone time and mileage: 'totals':{'mileage': ##value, 'minutes': ##value}
-
-        #Todo: Restructure this function. This is messy
-        """
-        context = super(Home, self).get_context_data(**kwargs)
-        td = datetime.today().date()
-        session = self.queryset().first()  # getting the most recent session in the past for the logged in user
-        if session:
-            # details for the most recent session
-            context['previous_session'] = session
-
-            on_call = session.end_date >= datetime.today().date() >= session.start_date
-
-            context['on_call'] = on_call
-
-            if on_call:
-                context['current_session'] = session
-
-            else:
-                current_pharmacist_oncall = OnCall.objects.filter(start_date__lte=td).filter(end_date__gte=td).first()
-                context['current_session'] = current_pharmacist_oncall
-                next_session = OnCall.objects.filter(pharmacist__user=self.request.user).filter(start_date__gt=td).first()
-                context['next_session'] = next_session
-
-            # Getting call data for that session
-            calls = Call.objects.filter(session__pharmacist__user=self.request.user).filter(session=session).order_by('-time_started')
-            context['calls'] = calls
-            # summing up the total phone time
-            phone_time = 0
-            for call in calls:
-                phone_time += call.minutes
-
-            # Setting context data for all the call ins for the most recent session for a summary
-            call_ins = calls.filter(call_in=True)  # getting all the calls where call
-            context['call_ins'] = call_ins
-            mileage = 0
-            for num, call in enumerate(call_ins, 1):
-                mileage += call.mileage
-
-            # summing up the totals of mileage and phone time
-            context['totals'] = {'mileage': mileage, 'minutes': phone_time}
+    if periods and periods.first().end_date >= td >= periods.first().start_date:  # checking whether they are on call
+        if request.method == 'POST':
+            form = AddCallForm(request.user, request.POST)
+            if form.is_valid():
+                res = form.save(commit=False)
+                messages.success(request, 'New call added.')
+                res.user = request.user
+                res.save()
+                return redirect('home')
         else:
-            # todo: work on this and incorporate it into the HTML better
-            context['previous_session'] = False
-            context['on_call'] = False
-            current_pharmacist_oncall = OnCall.objects.filter(start_date__lte=td).filter(end_date__gte=td).first()
-            context['current_session'] = current_pharmacist_oncall
-            next_session = OnCall.objects.filter(pharmacist__user=self.request.user).filter(start_date__gt=td).first()
-            context['next_session'] = next_session
-            context['totals'] = {'mileage': False, 'minutes': False}
-        return context
+            current_period = pharmacist.periods.filter(
+                Q(start_date__lte=td) & Q(end_date__gt=td)).first()
+            calls = current_period.calls.all()
+            call_ins = calls.filter(call_in=True)
+
+            minutes = 0
+            mileage = 0
+            for call in calls:
+                minutes += call.minutes
+            for call_in in call_ins:
+                mileage += call_in.mileage
+            call_form = AddCallForm(request.user)
+            data = {
+                'period': current_period,
+                'calls': calls,
+                'call_ins': call_ins,
+                'totals': {'minutes': minutes, 'mileage': mileage},
+                'call_form': call_form
+            }
+            return render(request, 'record/oncall.html', data)  # show the template for while on call
+    else:  # they are not on call
+        try:  # i.e. they have a previous session we can summarize
+            last_period = periods.first()
+            calls = last_period.calls.all()   # getting all the calls for that period
+            call_ins = calls.filter(call_in=True)   # filtering out the call ins
+
+            # totalling the minutes and mileage
+            minutes = 0
+            for call in calls:
+                minutes += call.minutes
+
+            mileage = 0
+            for call in call_ins:
+                mileage += call.mileage
+        except AttributeError:
+            last_period = False
+            calls = False
+            call_ins = False
+            mileage = False
+            minutes = False
+
+        try:
+            next_period = pharmacist.periods.filter(start_date__gt=td)
+            current_period = OnCall.objects.filter(
+                Q(start_date__lte=td) & Q(end_date__gt=td)).first()
+
+        except AttributeError:
+            next_period = False
+            current_period = False
+
+        data = {
+            'last_period': last_period,
+            'call_ins': call_ins,
+            'calls': calls,
+            'totals': {'mileage': mileage, 'minutes': minutes},
+            'current_period': current_period,
+            'next_period': next_period,
+            'periods': periods
+        }
+        return render(request, 'record/not_on_call.html', data)  # re-route to the not_on call template
 
 
 class OnCallDetail(DetailView):
@@ -94,11 +105,11 @@ class OnCallDetail(DetailView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(OnCallDetail, self).get_context_data(**kwargs)
         td = datetime.today().date()
-        session = OnCall.objects.filter(pharmacist__user=self.request.user).filter(
-            start_date__lte=td).last()  # getting the most recent session in the past
+        session = OnCall.objects.filter(
+            Q(pharmacist__user=self.request.user) & Q(start_date__lte=td)).last()
         context['pharmacist'] = session.pharmacist
 
-        calls = Call.objects.filter(session__pharmacist__user=self.request.user).filter(session=session).order_by('-time_started')
+        calls = session.calls.order_by('-time_started')
         context['calls'] = calls
 
         # summing up the total phone time
@@ -123,21 +134,6 @@ class CallDetail(DetailView):
     model = Call
     template_name = 'record/view_call.html'
 
-
-@login_required
-def new_call(request):
-    print(request.user)
-    if request.method == 'POST':
-        form = AddCallForm(request.user, request.POST)
-        if form.is_valid():
-            res = form.save(commit=False)
-            messages.success(request, 'New call added.')
-            res.user = request.user
-            res.save()
-            return redirect('home')
-    else:
-        call_form = AddCallForm(request.user)
-    return render(request, 'record/add_call.html', {'call_form': call_form})
 
 
 @login_required

@@ -26,7 +26,7 @@ class OnCall(models.Model):
     """
     Model used for an on call period
     """
-    pharmacist = models.ForeignKey(Pharmacist, on_delete=models.CASCADE)
+    pharmacist = models.ForeignKey(Pharmacist, on_delete=models.CASCADE, related_name='periods')
     start_date = models.DateField()
     end_date = models.DateField()
 
@@ -60,7 +60,7 @@ class Call(models.Model):
         ('PMH','Princess Margaret'),
         ('Other','Other')
     ]
-    session = models.ForeignKey(OnCall, on_delete=models.CASCADE)
+    session = models.ForeignKey(OnCall, on_delete=models.CASCADE, related_name='calls')
     time_started = models.DateTimeField(default=datetime.now) # todo validation on this being in session_start - session_end
     call_type = models.CharField(choices=TYPES, max_length=10)
     caller_type = models.CharField(choices=CALLERS, max_length=13)

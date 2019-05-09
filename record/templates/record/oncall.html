@@ -1,0 +1,112 @@
+{% extends 'record/base.html' %}
+{% load crispy_forms_tags %}
+{% block data %}
+<!--
+So here's the plan. I want two different views essentially.
+    1. User is currently on call. Want a summary table on the left, and a current log on the right
+    2. User is not on call. Summary of LAST on call on the left, details of next on call on left and list of sessions below
+-->
+
+    <div class="row my-3">
+        <div class="col"><p class="text-center h2">{{user.first_name}}, you are on call: {{period.start_date|date:'D (d/m)'}} to {{period.end_date|date:'D (d/m)'}}. </p></div>
+    </div>
+    <div class="row">
+        <!-- Summary table -->
+        <div class="col-4">
+            <div class="card shadow">
+                <div class="card-header"><b>Summary</b></div>
+                <div class="card-body mx-0">
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <th>Phone time</th>
+                            <td>{{totals.minutes}} minutes</td>
+                        </tr>
+                        {% if call_ins %}
+                            {% for call_in in call_ins %}
+                            <tr>
+                                <th>Call in {{forloop.counter}}</th>
+                                <td>{{call_in.time_started|date:'M d H:m'}} - {{call_in.time_ended|date:'M d H:m'}}</td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <th>Mileage</th>
+                                <td>{{totals.mileage}}km</td>
+                            </tr>
+                        {% else %}
+                            <td colspan="2" class="lead text-center">No call ins</td>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="card">
+                <div class="card-header">
+                    <p class="h5">Call details:
+                            <button type="button" class="btn btn-outline-success btn-sm float-right" data-toggle="modal" data-target="#exampleModalCenter">
+                              Add new call
+                            </button>
+                    </p>
+                </div>
+                <table class="table">
+                    <thead class="thead">
+                        <tr>
+                            <th scope="col" class="col-1">Date</th>
+                            <th scope="col" class="col-1">Type</th>
+                            <th scope="col" class="col-1">Length (min)</th>
+                            <th scope="col" class="col-1">Call-in</th>
+                            <th scope="col">Description</th>
+                            <th scope="col"></th>
+                        </tr>
+                        {% for call in calls %}
+                        <tr>
+                            <td class="col-1">{{call.time_started|date:'d/m'}}</td>
+                            <td class="col-1">{{call.call_type}}</td>
+                            <td class="col-1">{{call.minutes}}</td>
+                            {% if call.call_in %}
+                                <td class="col-1">Yes</td>
+                            {% else %}
+                                <td class="col-1">No</td>
+                            {%endif%}
+                            <td>{{call.description}}</td>
+                            <td class="col-1"><a href="{% url 'view_call' call.id %}" class="btn btn-warning">View</a></td>
+                        {% endfor %}
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row my-5">
+        Searcher down here? Or, maybe like a contacts list/useful information
+    </div>
+
+<!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="form" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="form">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">New Call</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+          <form action="/" method="post" id="new_call_form">
+              {% csrf_token %}
+              {{call_form|crispy}}
+          </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" form="new_call_form" value="Submit">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'record/base.html' %}
+{% block data %}
+
+    <div class="row my-3">
+        <div class="col-6">
+            <div class="card shadow">
+                <div class="card-header">
+                    Summary for your last period: <i>{{last_period.start_date|date:'d/m/y'}} - {{last_period.end_date|date:'d/m/y'}}</i>
+                    <a href="{% url 'oncall_view' last_period.id %}" class="btn btn-info btn-sm float-right">View</a>
+                </div>
+                <table class="table">
+                    <tr>
+                        <th>Phone time</th>
+                        <td>{{totals.minutes}} minutes</td>
+                    </tr>
+                    <tr>
+                        <th>No. call-ins</th>
+                        <td>{{call_ins|length}}</td>
+                    </tr>
+                    {% if call_ins %}
+                        {% for call_in in call_ins %}
+                        {% endfor %}
+                        <tr>
+                            <th>Mileage</th>
+                            <td>{{totals.mileage}}km</td>
+                        </tr>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+        <!-- Next session table-->
+        <div class="col-6">
+            <div class="card shadow">
+                <ul class="list-group list-group-flush">
+                    {% if next_period %}
+                    <li class="list-group-item">Your next on call period: {{next_period.start_date|date:'M d'}} - {{next_period.end_date|date:'M d'}}</li>
+                    {% else %}
+                    <li class="list-group-item">You do not have another on call period booked yet.</li>
+                    {% endif %}
+                    <li class="list-group-item">{{current_period.pharmacist}} is on call: {{current_period.start_date|date:'M d'}} - {{current_period.end_date|date:'M d'}} </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header h5">{{user.first_name}}'s on call periods</div>
+                    <table class="table">
+                        <thead class="thead">
+                            <tr>
+                                <th>Dates</th>
+                                <th></th>
+                            </tr>
+                            {% for period in periods %}
+                                <tr>
+                                    <td>{{period.start_date}} - {{period.end_date}}</td>
+                                    <td><a href="{% url 'oncall_view' period.id %}" class="btn btn-outline-info">View</a></td>
+                                </tr>
+                            {% endfor %}
+                        </thead>
+                    </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

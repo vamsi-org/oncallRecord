@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import *
+from datetime import datetime
+from django.db.models import Q
 
 
 class UserRegisterForm(UserCreationForm):
@@ -24,9 +26,14 @@ class UserUpdateForm(forms.ModelForm):
 class AddCallForm(forms.ModelForm):
     class Meta:
         model = Call
-        exclude = ('minutes',)
+        exclude = ['minutes']
 
     def __init__(self, user, *args, **kwargs):
         super(AddCallForm, self).__init__(*args, **kwargs)
-        self.fields['session'].queryset = OnCall.objects.filter(pharmacist__user=user)
+        td = datetime.today().date()
+        print(user, user.username)
+        qset = OnCall.objects.filter(
+            pharmacist__user=user)
+        self.fields['session'].queryset = qset
+        self.fields['session'].initial = qset.first()
 
