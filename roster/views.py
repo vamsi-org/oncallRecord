@@ -18,3 +18,7 @@ def profile(request):
         'u_form': u_form
     }
     return render(request, 'record/profile.html', context=context)
+
+
+def roster(request):
+    return render(request, template_name='roster/calendar.html')
