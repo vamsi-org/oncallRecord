@@ -16,16 +16,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from record import views as record_views
+from roster import views as roster_views
 from django.contrib.auth import views as user_views
-from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', login_required(record_views.Home.as_view()), name='home'),  # todo this is not re-routing correctly
-    path('profile/', record_views.profile, name='profile'),
+    path('', record_views.home_func, name='home'),
+    path('profile/', roster_views.profile, name='profile'),
     path('logout/', user_views.LogoutView.as_view(template_name='record/logout.html'), name='logout'),
     path('login/', user_views.LoginView.as_view(template_name='record/login.html'), name='login'),
-    path('add_call/', record_views.new_call, name="add_call"),
     path('view_record/<int:pk>', record_views.OnCallDetail.as_view(), name='oncall_view'),
-    path('view_call/<int:pk>/', record_views.CallDetail.as_view(), name='view_call')
+    path('view_call/<int:pk>/', record_views.CallDetail.as_view(), name='view_call'),
+    path('search/', record_views.Search.as_view(), name='search'),
+    path('roster/', roster_views.roster, name='roster')
 ]
