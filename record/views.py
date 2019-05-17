@@ -142,8 +142,9 @@ class Search(ListView):
     context_object_name = 'results'
 
     def get_queryset(self):
-        if self.request.method == 'GET':
+        if self.request.GET.get('q'):
             q = self.request.GET.get('q')
             print(q)
-            qset =  Call.objects.filter(description__contains=q)
+            qset = Call.objects.filter(description__contains=q)
+            print(qset)
             return qset

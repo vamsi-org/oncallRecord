@@ -13,6 +13,10 @@
 </div>
 
 {% for result in results %}
-    {{result.description}}
+<div class="card shadow my-2">
+    <div class="card-body">
+        {{result}}
+    </div>
+</div>
 {% endfor %}
 {% endblock %}
