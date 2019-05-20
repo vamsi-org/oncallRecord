@@ -25,7 +25,6 @@ body{
     font-size: 15px;
 }
 
-
 nav .title{
     width: 40%;
     color: white;
@@ -43,17 +42,46 @@ nav .title{
 }
 
 .nav-link:hover{
-    color:green;
+    color:grey;
 }
 
-
-
-
-main{
-    position: absolute;
+.main-container{
+    position: relative;
+    width: 90%;
+    margin: 0 5% 0 5%;
     top: 80px;
-    width: 80%;
-    margin: 0 10% 0 10%;
-    border: 1px solid grey;
     display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 5fr 1fr;
+    grid-template-areas:
+        "header header"
+        "left right"
+        "bottom bottom";
+    text-align: center;
+}
+
+.main-header{
+    grid-area: header;
+    border: 1px solid grey;
+    border-radius: 5px;
+}
+
+.main-left{
+    grid-area: left;
+    border: 1px solid grey;
+    border-radius: 5px;
+
+}
+
+.main-right {
+    grid-area: right;
+    border: 1px solid grey;
+    border-radius: 5px;
+}
+
+.main-bottom{
+    grid-area: bottom;
+    border: 1px solid grey;
+    border-radius: 5px;
 }

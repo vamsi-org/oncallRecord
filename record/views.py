@@ -90,7 +90,7 @@ def home_func(request):
           'next_period': next_period,
           'periods': periods
         }
-        return render(request, 'record/base2.html')  # re-route to the not_on call template
+        return render(request, 'record/not_on_call.html')  # re-route to the not_on call template
 
 
 class OnCallDetail(DetailView):
