@@ -1,20 +1,30 @@
 body{
     margin: 0;
+    padding: 0;
     font-family: 'Roboto', sans-serif;
 }
 
 .nav{
     width: 100%;
     background: #1E90FF;
-    position: fixed;
     top: 0px;
+    left: 0px;
+}
+
+.container{
+    max-width: 2048px;
+    position: relative;
+    margin: 0 auto;
+}
+
+.nav .container{
     display:flex;
     justify-content: center;
     align-items: center;
 }
 
 .nav ul{
-    width: 30%;
+    width: 20%;
     height: 100%;
     display:flex;
     justify-content: space-around;
@@ -25,10 +35,11 @@ body{
     font-size: 15px;
 }
 
-nav .title{
+.nav .title{
     width: 40%;
     color: white;
     text-align: center;
+    text-size: 26px;
 }
 
 .nav .utils{
@@ -42,14 +53,12 @@ nav .title{
 }
 
 .nav-link:hover{
-    color:grey;
+    text-decoration: underline;
 }
 
-.main-container{
+.main-grid{
     position: relative;
-    width: 90%;
-    margin: 0 5% 0 5%;
-    top: 80px;
+    margin: 5px 10% 0 10%;
     display: grid;
     grid-gap: 10px;
     grid-template-columns: 1fr 1fr;
@@ -58,30 +67,77 @@ nav .title{
         "header header"
         "left right"
         "bottom bottom";
-    text-align: center;
 }
 
 .main-header{
     grid-area: header;
-    border: 1px solid grey;
-    border-radius: 5px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 900;
 }
 
 .main-left{
     grid-area: left;
-    border: 1px solid grey;
-    border-radius: 5px;
-
 }
 
 .main-right {
     grid-area: right;
-    border: 1px solid grey;
-    border-radius: 5px;
 }
 
 .main-bottom{
     grid-area: bottom;
     border: 1px solid grey;
     border-radius: 5px;
+}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  padding: 0 5px;
+  transition: 0.3s;
+  border-radius: 5px;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.card-header{
+    width: 100%;
+    border-bottom: 1px solid grey;
+    display: flex;
+    align-items: center;
+}
+
+.card h2{
+    line-height: 2;
+    font-size: 18px;
+    font-weight: 400;
+    display: inline-block;
+    width: 80%;
+}
+
+.card-header a{
+    border: 1px solid black;
+    width: 10%;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.card-table{
+    width: 100%;
+    border-spacing: 15px;
+}
+
+.card-table td{
+    width: 50%;
+}
+
+@media (max-width: 400px){
+    .nav .container{
+        flex-direction: column;
+    }
+    .nav .title{
+        order: -1;
+    }
 }
