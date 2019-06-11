@@ -1,20 +1,30 @@
 body{
     margin: 0;
+    padding: 0;
     font-family: 'Roboto', sans-serif;
 }
 
 .nav{
     width: 100%;
     background: #1E90FF;
-    position: fixed;
     top: 0px;
+    left: 0px;
+}
+
+.container{
+    max-width: 2048px;
+    position: relative;
+    margin: 0 auto;
+}
+
+.nav .container{
     display:flex;
     justify-content: center;
     align-items: center;
 }
 
 .nav ul{
-    width: 30%;
+    width: 20%;
     height: 100%;
     display:flex;
     justify-content: space-around;
@@ -25,10 +35,11 @@ body{
     font-size: 15px;
 }
 
-nav .title{
+.nav .title{
     width: 40%;
     color: white;
     text-align: center;
+    text-size: 26px;
 }
 
 .nav .utils{
@@ -42,46 +53,152 @@ nav .title{
 }
 
 .nav-link:hover{
-    color:grey;
+    text-decoration: underline;
 }
 
-.main-container{
+.main-grid{
     position: relative;
-    width: 90%;
-    margin: 0 5% 0 5%;
-    top: 80px;
+    margin: 20px 10% 0 10%;
     display: grid;
-    grid-gap: 10px;
+    grid-gap: 40px 50px;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 5fr 1fr;
     grid-template-areas:
         "header header"
         "left right"
         "bottom bottom";
-    text-align: center;
 }
 
 .main-header{
     grid-area: header;
-    border: 1px solid grey;
-    border-radius: 5px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 500;
 }
 
 .main-left{
     grid-area: left;
-    border: 1px solid grey;
-    border-radius: 5px;
-
 }
 
 .main-right {
     grid-area: right;
-    border: 1px solid grey;
-    border-radius: 5px;
 }
 
 .main-bottom{
     grid-area: bottom;
     border: 1px solid grey;
     border-radius: 5px;
+}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  padding: 0 5px;
+  transition: 0.3s;
+  border-radius: 5px;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.card-header{
+    border-bottom: 1px solid grey;
+    margin: 0 5px 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card h2{
+    line-height: 2;
+    font-size: 18px;
+    font-weight: 400;
+    display: inline-block;
+}
+
+.card-table{
+    width: 100%;
+    border-spacing: 15px;
+}
+
+.card-table td{
+    width: 50%;
+}
+
+#nextDets{
+    justify-content: center;
+}
+
+.btn{
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.btn-yellow{
+    background: hsl(48, 100%, 55%);
+    color: black;
+}
+
+.btn-yellow:hover{
+    animation-name: yellow-hover;
+    animation-duration: 0.3s;
+    background: hsl(48, 100%, 40%);
+}
+
+@keyframes yellow-hover{
+    100%{
+        background: hsl(48, 100%, 40%);
+    }
+    0%{
+        background: hsl(48, 100%, 55%);
+    }
+}
+
+@media (max-width: 400px){
+    .nav .container{
+        flex-direction: column;
+    }
+    .nav .title{
+        order: -1;
+    }
+}
+
+.calendar {
+  width: 98%;
+  margin: auto;
+  font-size: 13px;
+}
+
+.calendar tr, .calendar td {
+  border: 1px solid black;
+}
+
+.calendar th {
+  padding: 10px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.calendar td {
+  width: 200px;
+  height: 150px;
+  padding: 20px 0px 0px 5px;
+}
+
+.month {
+  font-size: 25px;
+}
+
+.date {
+  font-size: 16px;
+}
+
+ul {
+  height: 100%;
+  padding: 0px 5px 0px 20px;
+}
+
+a {
+  color: #17a2b8;
 }

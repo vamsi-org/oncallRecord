@@ -1,10 +1,52 @@
 {% extends 'record/base.html' %}
-{% block title %}Not oncall {% endblock %}
+{% block title %}Not oncall{% endblock %}
 {% block content %}
-<div class="main-container">
-    <div class="main-header">Header</div>
-    <div class="main-left">Left content</div>
-    <div class="main-right">Right content</div>
-    <div class="main-bottom">Bottom section</div>
+<div class="container">
+    <div class="main-grid">
+        <div class="main-header">
+            {{user.first_name}}, here's your on call summary:
+        </div>
+        <div class="main-left">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Summary of last on call period: <i>{{last_period.start_date}} - {{last_period.end_date}}</i></h2>
+                    <a href="#" type="button" class="btn btn-yellow">View</a>
+                </div>
+
+                <table class="card-table">
+                    <tbody>
+                        <tr>
+                            <td>Minutes on call</td>
+                            <td>{{totals.minutes}} mins</td>
+                        </tr>
+                    {% if call_ins %}
+                        {% for call_in in call_ins %}
+                        {% endfor %}
+                        <tr>
+                            <td>Mileage</td>
+                            <td>{{totals.mileage}} km</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td>No call in data</td>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="main-right">
+            <div class="card">
+                <div class="card-header">
+                    <p>{{current_period.pharmacist}} is on call until {{current_period.end_date}}</p>
+                </div>
+
+                <div class="card-header">
+                    <p>Your next on call period is: {{next_period.start_date}} - {{next_period.end_date}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="main-bottom">Bottom section</div>
+    </div>
 </div>
 {% endblock %}

@@ -16,9 +16,7 @@ def home_func(request):
         periods = pharmacist.periods.filter(start_date__lte=td).order_by('-start_date')
 
     except AttributeError:  # user has no periods of on call
-        periods = False
-        html = "<h1> No user found </h1>"
-        return HttpResponse(html)
+        return redirect('login')
 
     if periods and periods.first().end_date >= td >= periods.first().start_date:  # checking whether they are on call
         if request.method == 'POST':
@@ -73,7 +71,7 @@ def home_func(request):
             call_ins = {}
 
         try:
-            next_period = pharmacist.periods.filter(start_date__gt=td)
+            next_period = pharmacist.periods.filter(start_date__gt=td).first()
             current_period = OnCallPeriod.objects.filter(
               Q(start_date__lte=td) & Q(end_date__gt=td)).first()
 
@@ -90,7 +88,7 @@ def home_func(request):
           'next_period': next_period,
           'periods': periods
         }
-        return render(request, 'record/not_on_call.html')  # re-route to the not_on call template
+        return render(request, 'record/not_on_call.html', data)  # re-route to the not_on call template
 
 
 class OnCallDetail(DetailView):
