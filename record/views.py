@@ -31,7 +31,7 @@ def home_func(request):
                 return redirect('home')
         else:
             current_period = pharmacist.periods.filter(
-                Q(start_date__lte=td) & Q(end_date__gte=td)).first()
+              Q(start_date__lte=td) & Q(end_date__gte=td)).first()
             try:
                 calls = current_period.calls.all()
                 call_ins = calls.filter(call_in=True)
@@ -39,33 +39,32 @@ def home_func(request):
                 calls = {}
                 call_ins = {}
 
-            minutes = 0
-            mileage = 0
+                minutes = 0
+                mileage = 0
             for call in calls:
                 minutes += call.minutes
             for call_in in call_ins:
                 mileage += call_in.mileage
             call_form = AddCallForm(request.user)
             data = {
-                'period': current_period,
-                'calls': calls,
-                'call_ins': call_ins,
-                'totals': {'minutes': minutes, 'mileage': mileage},
-                'call_form': call_form
+              'period': current_period,
+              'calls': calls,
+              'call_ins': call_ins,
+              'totals': {'minutes': minutes, 'mileage': mileage},
+              'call_form': call_form
             }
             return render(request, 'record/oncall.html', data)  # show the template for while on call
     else:  # they are not on call
+        mileage = 0
+        minutes = 0
         try:  # i.e. they have a previous session we can summarize
             last_period = periods.first()
             calls = last_period.calls.all()   # getting all the calls for that period
             call_ins = calls.filter(call_in=True)   # filtering out the call ins
-
             # totalling the minutes and mileage
-            minutes = 0
             for call in calls:
                 minutes += call.minutes
 
-            mileage = 0
             for call in call_ins:
                 mileage += call.mileage
         except AttributeError:
@@ -76,22 +75,22 @@ def home_func(request):
         try:
             next_period = pharmacist.periods.filter(start_date__gt=td)
             current_period = OnCallPeriod.objects.filter(
-                Q(start_date__lte=td) & Q(end_date__gt=td)).first()
+              Q(start_date__lte=td) & Q(end_date__gt=td)).first()
 
         except AttributeError:
             next_period = {}
             current_period = {}
 
         data = {
-            'last_period': last_period,
-            'call_ins': call_ins,
-            'calls': calls,
-            'totals': {'mileage': mileage, 'minutes': minutes},
-            'current_period': current_period,
-            'next_period': next_period,
-            'periods': periods
+          'last_period': last_period,
+          'call_ins': call_ins,
+          'calls': calls,
+          'totals': {'mileage': mileage, 'minutes': minutes},
+          'current_period': current_period,
+          'next_period': next_period,
+          'periods': periods
         }
-        return render(request, 'record/not_on_call.html', data)  # re-route to the not_on call template
+        return render(request, 'record/not_on_call.html')  # re-route to the not_on call template
 
 
 class OnCallDetail(DetailView):
