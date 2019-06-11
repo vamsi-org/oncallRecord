@@ -58,9 +58,9 @@ body{
 
 .main-grid{
     position: relative;
-    margin: 5px 10% 0 10%;
+    margin: 20px 10% 0 10%;
     display: grid;
-    grid-gap: 10px;
+    grid-gap: 40px 50px;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 5fr 1fr;
     grid-template-areas:
@@ -73,7 +73,7 @@ body{
     grid-area: header;
     text-align: center;
     font-size: 30px;
-    font-weight: 900;
+    font-weight: 500;
 }
 
 .main-left{
@@ -102,10 +102,11 @@ body{
 }
 
 .card-header{
-    width: 100%;
     border-bottom: 1px solid grey;
+    margin: 0 5px 0 5px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 .card h2{
@@ -113,15 +114,6 @@ body{
     font-size: 18px;
     font-weight: 400;
     display: inline-block;
-    width: 80%;
-}
-
-.card-header a{
-    border: 1px solid black;
-    width: 10%;
-    text-align: center;
-    border-radius: 5px;
-    padding: 5px;
 }
 
 .card-table{
@@ -133,6 +125,36 @@ body{
     width: 50%;
 }
 
+#nextDets{
+    justify-content: center;
+}
+
+.btn{
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.btn-yellow{
+    background: hsl(48, 100%, 55%);
+    color: black;
+}
+
+.btn-yellow:hover{
+    animation-name: yellow-hover;
+    animation-duration: 0.3s;
+    background: hsl(48, 100%, 40%);
+}
+
+@keyframes yellow-hover{
+    100%{
+        background: hsl(48, 100%, 40%);
+    }
+    0%{
+        background: hsl(48, 100%, 55%);
+    }
+}
+
 @media (max-width: 400px){
     .nav .container{
         flex-direction: column;
@@ -140,4 +162,43 @@ body{
     .nav .title{
         order: -1;
     }
+}
+
+.calendar {
+  width: 98%;
+  margin: auto;
+  font-size: 13px;
+}
+
+.calendar tr, .calendar td {
+  border: 1px solid black;
+}
+
+.calendar th {
+  padding: 10px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.calendar td {
+  width: 200px;
+  height: 150px;
+  padding: 20px 0px 0px 5px;
+}
+
+.month {
+  font-size: 25px;
+}
+
+.date {
+  font-size: 16px;
+}
+
+ul {
+  height: 100%;
+  padding: 0px 5px 0px 20px;
+}
+
+a {
+  color: #17a2b8;
 }

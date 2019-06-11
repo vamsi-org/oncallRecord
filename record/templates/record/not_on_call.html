@@ -1,16 +1,16 @@
 {% extends 'record/base.html' %}
-{% block title %}Not oncall {% endblock %}
+{% block title %}Not oncall{% endblock %}
 {% block content %}
 <div class="container">
     <div class="main-grid">
         <div class="main-header">
-            {{user.first_name}}, here's your on call summary
+            {{user.first_name}}, here's your on call summary:
         </div>
         <div class="main-left">
             <div class="card">
                 <div class="card-header">
                     <h2>Summary of last on call period: <i>{{last_period.start_date}} - {{last_period.end_date}}</i></h2>
-                    <a href="#" type="button">View</a>
+                    <a href="#" type="button" class="btn btn-yellow">View</a>
                 </div>
 
                 <table class="card-table">
@@ -38,7 +38,11 @@
         <div class="main-right">
             <div class="card">
                 <div class="card-header">
-                    <h2>Maybe something here about next period</h2>
+                    <p>{{current_period.pharmacist}} is on call until {{current_period.end_date}}</p>
+                </div>
+
+                <div class="card-header">
+                    <p>Your next on call period is: {{next_period.start_date}} - {{next_period.end_date}}</p>
                 </div>
             </div>
         </div>

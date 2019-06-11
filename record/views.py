@@ -71,7 +71,7 @@ def home_func(request):
             call_ins = {}
 
         try:
-            next_period = pharmacist.periods.filter(start_date__gt=td)
+            next_period = pharmacist.periods.filter(start_date__gt=td).first()
             current_period = OnCallPeriod.objects.filter(
               Q(start_date__lte=td) & Q(end_date__gt=td)).first()
 

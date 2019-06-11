@@ -11,8 +11,8 @@
     <nav class="nav">
         <div class="container">
             <ul class="tools">
-                <li><a href="#" class="nav-link">Dashboard</a></li>
-                <li><a href="#" class="nav-link">Search</a></li>
+                <li><a href="{% url 'home' %}" class="nav-link">Dashboard</a></li>
+                <li><a href="{% url 'search' %}" class="nav-link">Search</a></li>
                 <li><a href="#" class="nav-link">Useful Info</a></li>
             </ul>
             <h1 class="title">CDHB Oncall Record</h1>
@@ -28,7 +28,11 @@
         </div>
     </nav>
     <main>
-        {% block content %}Main page content here. If you are seeing this then the website is broken!{% endblock %}
+        {% block content %}
+        <div class="container" style="text-align:center;">
+            <h1>Main page content here. If you are seeing this then then something has gone wrong!</h1>
+        </div>
+        {% endblock %}
     </main>
     <footer></footer>
 </body>
