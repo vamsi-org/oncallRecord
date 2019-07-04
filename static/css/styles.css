@@ -4,23 +4,23 @@ body{
     font-family: 'Roboto', sans-serif;
 }
 
-.nav{
-    width: 100%;
-    background: #1E90FF;
-    top: 0px;
-    left: 0px;
-}
-
 .container{
     max-width: 2048px;
     position: relative;
     margin: 0 auto;
 }
 
+.nav {
+    width: 100%;
+    background: #1E90FF;
+    top: 0px;
+    left: 0px;
+}
+
 .nav .container{
     display:flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
 }
 
 .nav ul{
@@ -68,6 +68,8 @@ body{
         "left right"
         "bottom bottom";
 }
+
+
 
 .main-header{
     grid-area: header;
@@ -143,15 +145,14 @@ body{
 .btn-yellow:hover{
     animation-name: yellow-hover;
     animation-duration: 0.3s;
-    background: hsl(48, 100%, 40%);
+    animation-fill-mode: forwards;
 }
 
 @keyframes yellow-hover{
+    0% {
+        background: hsl(48, 100%, 55%);}
     100%{
         background: hsl(48, 100%, 40%);
-    }
-    0%{
-        background: hsl(48, 100%, 55%);
     }
 }
 

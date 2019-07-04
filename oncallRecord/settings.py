@@ -34,7 +34,6 @@ INSTALLED_APPS = [
     'record.apps.RecordConfig',
     'roster.apps.RosterConfig',
     'crispy_forms',
-    'schedule',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

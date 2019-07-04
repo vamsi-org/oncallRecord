@@ -3,16 +3,15 @@ from django.views.generic import DetailView, ListView
 from django.contrib import messages
 from .forms import AddCallForm
 from .models import Call
-from roster.models import Pharmacist, OnCallPeriod
+from roster.models import Staff, OnCallPeriod
 from datetime import datetime
-from django.http import HttpResponse
 from django.db.models import Q
 
 
 def home_func(request):
     td = datetime.today().date()
     try:
-        pharmacist = Pharmacist.objects.filter(user__username=request.user).first()
+        pharmacist = Staff.objects.filter(user__username=request.user).first()
         periods = pharmacist.periods.filter(start_date__lte=td).order_by('-start_date')
 
     except AttributeError:  # user has no periods of on call

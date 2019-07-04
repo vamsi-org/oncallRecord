@@ -9,19 +9,28 @@ The record should be accessed from here to populate the data
 """
 
 
-class Pharmacist(models.Model):
+class Staff(models.Model):
     """
     Setting up the model for a pharmacist
     """
+    roles = (
+        ("Pharmacist","Pharmacist"),
+        ("Pharmacy Technician", "Pharmacy Technician")
+    )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=10, choices=roles)
     is_sterile_trained = models.BooleanField(default=False)
 
+    class Meta:
+        verbose_name = "staff"
+        verbose_name_plural = "staff"
+
     def __str__(self):
-        return f'{self.user.first_name} {self.user.last_name}'
+        return f'{self.user.first_name} {self.user.last_name}: {self.role}'
 
 
 class OnCallPeriod(models.Model):
-    pharmacist = models.ForeignKey(Pharmacist, on_delete=models.CASCADE, related_name='periods')
+    pharmacist = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name='periods')
     start_date = models.DateField('Start date of on call period.', help_text="The date the on call period starts.")
     end_date = models.DateField('End date of on call period.', help_text="The date the on call period ends.")
     tdm = models.BooleanField('TDM pharmacist', blank=True, help_text="Select this if this is for a pharmacist to "
@@ -53,4 +62,8 @@ class OnCallPeriod(models.Model):
 
     def __str__(self):
         return f'{self.pharmacist}: {self.start_date: %d/%m/%y} - {self.end_date:%d/%m/%y}'
+
+
+
+
 
