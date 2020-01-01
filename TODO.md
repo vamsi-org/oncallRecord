@@ -1,11 +1,8 @@
 # ToDo
 
+Change of heart. I want to refactor this entirely so that it's a single page app. I want to use a REST api as well 
+
 ## Home Screen
-- Refactor to have the dashboard as a React application
-    - Views
-    - URLs
-    - HTML
-    - JS
 - Add automatic tests!
 
 ### Issues with OnCall/Calls:
