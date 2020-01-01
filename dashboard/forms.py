@@ -1,5 +1,5 @@
 from django import forms
-from record.models import OnCallPeriod
+from .models import OnCallPeriod
 from .models import Call
 from datetime import datetime
 

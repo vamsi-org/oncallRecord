@@ -31,8 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'record.apps.RecordConfig',
-    'roster.apps.RosterConfig',
+    'dashboard',
+    'roster',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
