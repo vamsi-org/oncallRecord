@@ -3,7 +3,7 @@ from django.views.generic import DetailView, ListView
 from django.contrib import messages
 from .forms import AddCallForm
 from .models import Call
-from roster.models import Staff, OnCallPeriod
+from roster.models import OnCallPeriod
 from datetime import datetime
 from django.db.models import Q
 
