@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from profile.models import Profile
+
 # Create your models here.
 """
 The idea here is for the roster app to house all the info on users, user groups and when someone is on call
@@ -41,7 +42,7 @@ class OnCallPeriod(models.Model):
                 )
 
     def __str__(self):
-        return f'{self.pharmacist}: {self.start_date: %d/%m/%y} - {self.end_date:%d/%m/%y}'
+        return f'{self.pharmacist.username}: {self.start_date: %d/%m/%y} - {self.end_date:%d/%m/%y}'
 
 
 

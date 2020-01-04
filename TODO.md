@@ -1,6 +1,6 @@
 # ToDo
 
-Change of heart. I want to refactor this entirely so that it's a single page app. I want to use a REST api as well 
+Change of heart. I want to refactor this entirely so that it's a single page app.
 
 ## Home Screen
 - Add automatic tests!
