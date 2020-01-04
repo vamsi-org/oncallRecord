@@ -1,6 +1,7 @@
 # ToDo
 
-Change of heart. I want to refactor this entirely so that it's a single page app.
+The plan is to have this entirely in django except for the roster and app itself
+https://stackoverflow.com/questions/29704733/adding-react-inside-a-django-project 
 
 ## Home Screen
 - Add automatic tests!
