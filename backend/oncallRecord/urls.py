@@ -20,9 +20,6 @@ from django.contrib.auth import views as user_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('dashboard.urls')),
-    path('profile/', roster_views.profile, name='profile'),
-    path('logout/', user_views.LogoutView.as_view(template_name='record/logout.html'), name='logout'),
-    path('login/', user_views.LoginView.as_view(template_name='record/login.html'), name='login'),
-    path('roster/', roster_views.roster, name='roster')
+    path('api/auth/', include('profile.urls')),
+    path('api/roster/', include('roster.urls'))
 ]
