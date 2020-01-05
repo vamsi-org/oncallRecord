@@ -1,13 +1,11 @@
 from django.urls import path, include
-from profile.api import ProfileList
+from .api import RegisterAPI, LoginAPI, UserAPI
+from knox import views as knox_views
 
 urlpatterns = [
-    path('list', ProfileList.as_view())
-    
+    path('', include('knox.urls')),
+    path('register/', RegisterAPI.as_view()),
+    path('login/', LoginAPI.as_view()),
+    path('user/', UserAPI.as_view()),
+    path('logout/', knox_views.LogoutView.as_view(), name='knox-logout'),
 ]
-
-'''
-    path('profile/', roster_views.profile, name='profile'),
-    path('logout/', user_views.LogoutView.as_view(template_name='record/logout.html'), name='logout'),
-    path('login/', user_views.LoginView.as_view(template_name='record/login.html'), name='login'),
-    path('roster/', roster_views.roster, name='roster')'''

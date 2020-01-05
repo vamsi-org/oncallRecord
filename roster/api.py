@@ -1,4 +1,4 @@
-from rest_framework import generics, viewsets, permissions
+'''from rest_framework import generics, viewsets, permissions
 from roster.serializers import OnCallPeriodSerializer, CallSerializer
 from roster.models import OnCallPeriod, Call
 
@@ -28,3 +28,4 @@ class CallViewSet(viewsets.ModelViewSet):
         user = self.request.user
 
         return Call.objects.filter(session__pharmacist__user__username=user)
+'''
