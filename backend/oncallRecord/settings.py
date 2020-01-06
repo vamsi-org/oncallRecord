@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'profile',
+    'roster',
     'rest_framework',
     'knox',
     'django.contrib.admin',

@@ -20,5 +20,5 @@ from django.contrib.auth import views as user_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/auth/', include('profile.urls')),
-    #path('api/roster/', include('roster.urls'))
+    path('api/roster/', include('roster.urls'))
 ]

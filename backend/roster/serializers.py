@@ -1,6 +1,5 @@
 from rest_framework import serializers, permissions
 from roster.models import OnCallPeriod, Call
-'''
 from profile.serializers import ProfileSerializer
 
 class OnCallPeriodSerializer(serializers.ModelSerializer):
@@ -26,4 +25,3 @@ class CallSerializer(serializers.ModelSerializer):
         exclude = (
             'id',
         )
-'''

@@ -1,4 +1,4 @@
-'''from rest_framework import generics, viewsets, permissions
+from rest_framework import generics, viewsets, permissions
 from roster.serializers import OnCallPeriodSerializer, CallSerializer
 from roster.models import OnCallPeriod, Call
 
@@ -11,7 +11,10 @@ class OncallPeriodList(generics.ListAPIView):
     To do: pagination! this may base off of the front end
     """
     serializer_class = OnCallPeriodSerializer
-    queryset = OnCallPeriod.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return OnCallPeriod.objects.all()
 
 
 class CallViewSet(viewsets.ModelViewSet):
@@ -28,4 +31,3 @@ class CallViewSet(viewsets.ModelViewSet):
         user = self.request.user
 
         return Call.objects.filter(session__pharmacist__user__username=user)
-'''
