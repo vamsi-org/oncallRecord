@@ -32,7 +32,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'profile',
-    'crispy_forms',
     'rest_framework',
     'knox',
     'django.contrib.admin',
@@ -133,8 +132,9 @@ STATICFILES_DIRS = [
 
 STATIC_URL = '/static/'
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'knox.auth.TokenAuthentication',
+    )
 
-LOGIN_REDIRECT_URL = 'home'
-
-LOGIN_URL = 'login'
+}
