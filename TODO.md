@@ -23,5 +23,5 @@
 
 ## Frontend
 - all of it...
-
+- User cookies to save API key
 
